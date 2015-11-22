@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)http://localhost:60174/PhotoGallery.cshtml?mode=vitrine -->
+<html lang="en" class="customevent cors json geolocation notification video bgpositionshorthand opacity no-hiddenscroll no-unicode backgroundsize bgpositionxy bgsizecover csstransforms preserve3d csstransitions wf-loading"><script id="tinyhippos-injected">if (window.top.ripple) { window.top.ripple("bootstrap").inject(window, document); }</script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<meta name="description" content="">
+<meta name="author" content="Tayfun Sertan Yaman">
+
+    <title>Example Photo gallery usage</title>
+
+    <!-- Custom styles for this template -->
+
+    <link href="./css/photogallery.css" rel="stylesheet">
+
+    <!--SCRIPTS-->
+    <script src="./Scripts/jquery.min.js"></script>
+    <script src="./Scripts/webfontloader.js"></script>
+    <script src="./Scripts/waitforimages.min.js"></script>
+    <script src="./Scripts/modernizr-custom-min.js"></script>
+    <script src="./Scripts/jquery.transit.min.js"></script>
+    <script>
+        var loading = false;
+        var page = 1;
+        var pagetotal = 1;
+        var maxphotos = 20;
+        var albumid = 0
+        var categoryid = 0;
+        var galleryid = 2;
+        var tagname = "";
+        var feedurl = "/PhotoFeeder.cshtml";
+             feedurl+= "?mode=vitrine" ;
+        var mode = "vitrine";
+    </script>
+    <script src="./Scripts/photogallery.js"></script>
+
+</head>
+
+<body>
+    <!--
+    MAIN SECTION
+    -->
+
+    <main>
+        <section id="content" role="main">
+            <div class="main-content">
+                <div id="contentfirst" class="main-content-box">                   
+
+                    <section class="photogallery-container clearfix" role="contentinfo">                    
+                            <ul id="photo-list">
+                                                <li img-id="54">
+    <div class="photo-box" img-id="54" img-width="420" img-height="279" img-row="1" style="width: 426px; height: 283px; display: block; transition-delay: 0s; opacity: 1; background-image: url(http://lorempixel.com/400/200);">
+        <a href="" img-id="54" class="photo-box-link">
+            <div class="photo-overlay">
+                <div class="overlaybar">
+                    <span>DSC_0049_1</span>
+                    <span class="photo-box-icon"><i class="fa fa-eye"></i>&nbsp;8</span>
+                </div>
+            </div>
+        </a>
+    </div>
+         </li>
+        <li img-id="59">
+    <div class="photo-box" img-id="59" img-width="420" img-height="279" img-row="1" style="width: 426px; height: 283px; display: block; transition-delay: 0.25s; opacity: 1; background-image: url(http://lorempixel.com/400/200);">
+        <a href="" img-id="59" class="photo-box-link">
+            <div class="photo-overlay">
+                <div class="overlaybar">
+                    <span>DSC_0127</span>
+                    <span class="photo-box-icon"><i class="fa fa-eye"></i>&nbsp;8</span>
+                </div>
+            </div>
+        </a>
+    </div>
+         </li>
+        <li img-id="91">
+    <div class="photo-box" img-id="91" img-width="420" img-height="279" img-row="1" style="width: 426px; height: 283px; display: block; transition-delay: 0.5s; opacity: 1; background-image: url(http://lorempixel.com/400/200);">
+        <a href="" img-id="91" class="photo-box-link">
+            <div class="photo-overlay">
+                <div class="overlaybar">
+                    <span>The famous drunk of Marmaris shot in his corner</span>
+                    <span class="photo-box-icon"><i class="fa fa-eye"></i>&nbsp;6</span>
+                </div>
+            </div>
+        </a>
+    </div>
+         </li>
+        <li img-id="95">
+    <div class="photo-box" img-id="95" img-width="420" img-height="279" img-row="2" style="width: 426px; height: 283px; display: block; transition-delay: 0.75s; opacity: 1; background-image: url(http://lorempixel.com/400/200);">
+        <a href="" img-id="95" class="photo-box-link">
+            <div class="photo-overlay">
+                <div class="overlaybar">
+                    <span>Sample</span>
+                    <span class="photo-box-icon"><i class="fa fa-eye"></i>&nbsp;6</span>
+                </div>
+            </div>
+        </a>
+    </div>
+         </li>
+        <li img-id="99">
+    <div class="photo-box" img-id="99" img-width="420" img-height="279" img-row="2" style="width: 426px; height: 283px; display: block; transition-delay: 1s; opacity: 1; background-image: url(http://lorempixel.com/400/200);">
+        <a href="" img-id="99" class="photo-box-link">
+            <div class="photo-overlay">
+                <div class="overlaybar">
+                    <span>Sample</span>
+                    <span class="photo-box-icon"><i class="fa fa-eye"></i>&nbsp;6</span>
+                </div>
+            </div>
+        </a>
+    </div>
+         </li>
+        <li img-id="101">
+    <div class="photo-box" img-id="101" img-width="420" img-height="279" img-row="2" style="width: 426px; height: 283px; display: block; transition-delay: 1.25s; opacity: 1; background-image: url(http://lorempixel.com/400/200);">
+        <a href="" img-id="101" class="photo-box-link">
+            <div class="photo-overlay">
+                <div class="overlaybar">
+                    <span>Sample</span>
+                    <span class="photo-box-icon"><i class="fa fa-eye"></i>&nbsp;5</span>
+                </div>
+            </div>
+        </a>
+    </div>
+         </li>
+        <li img-id="102">
+    <div class="photo-box" img-id="102" img-width="420" img-height="279" img-row="3" style="width: 331px; height: 220px; display: block; transition-delay: 1.5s; opacity: 1; background-image: url(http://lorempixel.com/400/200);">
+        <a href="" img-id="102" class="photo-box-link">
+            <div class="photo-overlay">
+                <div class="overlaybar">
+                    <span>Sample</span>
+                    <span class="photo-box-icon"><i class="fa fa-eye"></i>&nbsp;4</span>
+                </div>
+            </div>
+        </a>
+    </div>
+         </li>
+                            </ul>
+                
+                        <div class="bottom-loader" id="albumloader" style="display: none;"><img src="./images/loader.gif" alt="Loading..."></div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </main>
+    <div class="photo-overlay" id="overlay"></div>
+    <div class="photo-loader" id="photoloader"><img src="./Images/loadergray.gif" alt="Loading..."></div>
+
+
+        <div class="photo-viewer-container" id="view-container">
+            <div class="photo-overlay-container" id="view-container-overlay"></div>
+            
+            <div class="photo-content">
+            <button title="Close (Esc)" type="button" class="photo-close" id="close-button"><i class="fa fa-close"></i></button>
+                <button type="button" title="Right (Right arrow)" class="photo-navicon photo-navicon-right" id="view-container-rightnav"><i class="fa fa-chevron-right"></i></button>
+                <button type="button" title="Left (Left arrow)" class="photo-navicon photo-navicon-left" id="view-container-leftnav"><i class="fa fa-chevron-left"></i></button>
+                
+            <figure id="photocontainer">      
+                    <img class="photo-viewer" id="viewer">
+                    <img class="photo-protector" id="protect" src="./Personal webpage of Tayfun Sertan Yaman_files/blank.gif">
+                    <figcaption>
+                        <div class="photo-info" id="photo-info">
+                            <table>
+                                <tbody><tr>
+                                    <td width="200px">
+                                        <span class="wicon-camera2 iconlarge" align="left" style="float:left;margin:2px;"></span>
+                                        <div class="camerainfopart"><span class="camerainfo" id="camera"></span></div>
+                                        <div class="camerainfopart"><span class="camerainfo" id="lens"></span>  </div>
+                                        <div class="camerainfopart"><span class="camerainfo icon-aperture"></span> <span class="camerainfo" id="aperture"></span>&nbsp;&nbsp;&nbsp;<span class="camerainfo" id="shutter"></span> </div>
+                                        <div class="camerainfopart">ISO <span class="camerainfo" id="iso"></span> </div>
+                                    </td>
+                                    <td>
+                                        <h2><span id="name"></span></h2>
+                                        <div class="camerainfopart">Date <span class="camerainfo" id="date"></span> </div><br>
+                                        <span id="desc"></span>
+                            </td></tr></tbody></table>
+                        </div>
+                    </figcaption>
+             </figure>
+        </div>
+       </div>
+
+</body></html>
