@@ -8,7 +8,7 @@
 var $container;
 var galleryWidth;
 var scrollbarwidth;
-var acceptableHeight =  220;
+var acceptableHeight =  270;
 var maxHeight =400;
 var rowcount = 0;
 var rowheight = [];
@@ -112,7 +112,7 @@ function placeinGallery($images, reset)
         var $previmages = $container.find(".photo-box[img-row='" + rowcount + "']");
         $previmages.each(function () {
             var $image = $(this);
-            var imgwidth = parseInt($image.attr("img-width")) + photomargin * 2;
+            var imgwidth = parseInt($image.attr("img-width"));// + photomargin * 2;
             var imgheight = parseInt($image.attr("img-height"));
             var photoid = $image.attr("img-id");
 
@@ -148,6 +148,9 @@ function placeinGallery($images, reset)
             var totalwidth=0, localwidth=0;
             var indexstart = imgindex;
 
+            var ratiox = 1;
+            var ratioy = 1;
+
             while (localwidth < galleryWidth)
             {
                 localwidth += rowwidths[imgindex];
@@ -156,29 +159,30 @@ function placeinGallery($images, reset)
                     totalwidth = localwidth;
                     imgindex++
                 }
-                else if(imgindex == indexstart)
-                    {
-                        totalwidth = galleryWidth;
-                        imgindex++;
-                    }
-               
+                else
+                if (imgindex == indexstart)
+                {
+                    totalwidth = galleryWidth;
+                    ratioy = (galleryWidth / localwidth);
+                    imgindex++;
+                }               
 
-                if(imgindex >= photoids.length)
+                if(imgindex == photoids.length)
                 {
                     break;
                 }
             }
-
-            if (!((imgindex >= photoids.length) && (totalwidth < galleryWidth))) {
-
-                var ratio = (galleryWidth / totalwidth);
+        
+            if (!((imgindex == photoids.length) && (totalwidth < galleryWidth))) {
+                var ratiox = (galleryWidth / totalwidth);
             }
-            else
+     
+            if (ratioy == 1)//No override
             {
-                ratio = 1;
-            }
-
-            curheight = Math.min(Math.floor(curheight * ratio), maxHeight);
+                ratioy = ratiox;
+            }            
+               
+            curheight = Math.min(Math.floor(curheight * ratioy), maxHeight);
         
             totalwidth = 0;
             var i = 0;
@@ -186,10 +190,10 @@ function placeinGallery($images, reset)
             for(i = indexstart; i<imgindex;i++)
             {
                 var curid = photoids[i];
-                var curwidth = rowwidths[i];
+                var curwidth = Math.min(rowwidths[i], galleryWidth);
                 var $curbox = $container.find("div[img-id='"+curid+"']");
 
-                curwidth = Math.floor(curwidth * ratio);
+                curwidth = Math.floor(curwidth * ratiox);
 
                 $curbox.css("width", curwidth+"px");
                 $curbox.css("height", curheight+"px");
@@ -436,6 +440,7 @@ $(document).ready(function () {
 
     function loadPhoto(photoid)
     {
+		
         $.ajax({
             type: 'GET',
             url: "http://lorempixel.com/400/200/" + photoid,
@@ -580,7 +585,7 @@ $(document).ready(function () {
     });
 
     //Set acceptables
-    acceptableHeight = ((mode === "album") || (mode === "galleries")) ? 420 : 220;
+    acceptableHeight = ((mode === "album") || (mode === "galleries")) ? 420 : 270;
     maxHeight = ( (mode === "album") || (mode === "galleries"))? 420 : 400;
 
 });
