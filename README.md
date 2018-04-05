@@ -16,6 +16,7 @@ modernizr 3.1.0 (Custom Build) (Included) - https://modernizr.com/
 
 jquery.transit plugin by Rico Sta. Cruz  https://github.com/rstacruz/jquery.transit
 
+TouchSwipe-Jquery-Plugin by Matt Bryson https://github.com/mattbryson/TouchSwipe-Jquery-Plugin
 
 Used script examples in the plugin :
 

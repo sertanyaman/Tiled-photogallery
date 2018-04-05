@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!-- saved from url=(0055)http://localhost:60174/PhotoGallery.cshtml?mode=vitrine -->
-<html lang="en" class="customevent cors json geolocation notification video bgpositionshorthand opacity no-hiddenscroll no-unicode backgroundsize bgpositionxy bgsizecover csstransforms preserve3d csstransitions wf-loading"><script id="tinyhippos-injected">if (window.top.ripple) { window.top.ripple("bootstrap").inject(window, document); }</script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
+<html lang="en">
+
+<meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
@@ -20,6 +20,7 @@
     <script src="./Scripts/waitforimages.min.js"></script>
     <script src="./Scripts/modernizr-custom-min.js"></script>
     <script src="./Scripts/jquery.transit.min.js"></script>
+	<script src="./Scripts/jquery.touchSwipe.min.js"></script>
     <script>
         var loading = false;
         var page = 1;
@@ -49,6 +50,7 @@
 
                     <section class="photogallery-container clearfix" role="contentinfo">                    
                             <ul id="photo-list">
+							<!-- example stream coming from photo feeder, for template page, erase it -->
                                                 <li img-id="54">
     <div class="photo-box" img-id="54" img-width="420" img-height="279" img-row="1" style="width: 426px; height: 283px; display: block; transition-delay: 0s; opacity: 1; background-image: url(http://lorempixel.com/400/200);">
         <a href="" img-id="54" class="photo-box-link">
@@ -133,8 +135,9 @@
         </a>
     </div>
          </li>
+		 <!-- END example stream  -->
                             </ul>
-                
+						<!-- bottom loader -->
                         <div class="bottom-loader" id="albumloader" style="display: none;"><img src="./images/loader.gif" alt="Loading..."></div>
                     </section>
                 </div>
@@ -143,7 +146,6 @@
     </main>
     <div class="photo-overlay" id="overlay"></div>
     <div class="photo-loader" id="photoloader"><img src="./Images/loadergray.gif" alt="Loading..."></div>
-
 
         <div class="photo-viewer-container" id="view-container">
             <div class="photo-overlay-container" id="view-container-overlay"></div>

@@ -8,8 +8,8 @@
 var $container;
 var galleryWidth;
 var scrollbarwidth;
-var acceptableHeight =  270;
-var maxHeight =400;
+var acceptableHeight =  150;
+var maxHeight =300;
 var rowcount = 0;
 var rowheight = [];
 var photomargin = 5;
@@ -19,6 +19,8 @@ var prevWidth = 0;
 var idCounter = 0;
 var vieweropen = false;
 var curphotoid = 0;
+
+
 
 function triggerGallery() {
    
@@ -253,6 +255,14 @@ $(window).load(function () {
 
 $(document).ready(function () {
     $container = $("#photo-list");
+    var swipeOptions = {
+        triggerOnTouchEnd: true,
+        swipeStatus: onSwipe,
+        allowPageScroll: "vertical",
+        threshold: 75,
+        fingers: 1,
+        excludedElements: "select, textarea, .noSwipe"
+    };
     
     $("#albumloader").show();
 
@@ -408,148 +418,6 @@ $(document).ready(function () {
         }
     });
 
-
-    $container.on("click",".photo-box-link",
-        function (event) {
-            event.preventDefault();
-            var $this = $(this);
-            var photoid = $this.attr("img-id");
-
-            openViewer();
-            showPhotoOverlay();
-            loadPhoto(photoid);            
-        }
-    );
-
-    function positionPhoto($image)
-    {
-        var $photoinfo = $("#photo-info");
-                
-        var $photocontainer = $("#photocontainer");
-        var containerheight = $photocontainer.outerHeight();
-        var totalheight = $image.outerHeight() + $photoinfo.outerHeight();
-
-        var padding = 0;
-        if (totalheight < containerheight) {
-            padding = Math.round(containerheight / 2) - Math.round(totalheight / 2);
-        }
-
-        $photocontainer.css("padding-top", padding);
-        $photoinfo.css('max-width', $image.outerWidth());
-    }
-
-    function loadPhoto(photoid)
-    {
-		
-        $.ajax({
-            type: 'GET',
-            url: "http://lorempixel.com/400/200/" + photoid,
-            datatype: 'json',
-            cache: true
-        }).done(function (data) {
-            curphotoid = photoid;
-
-            $('#viewer').attr('src', data.path).one("load", function () {
-                var $this = $(this);
-                $("#photoloader").hide();
-                $("#view-container").show();
-                $this.show();
-                //write image data
-                $('#name').text(data.name);
-                $('#camera').text(data.camera);
-                $('#lens').text(data.lens);
-                $('#aperture').text(data.aperture);
-                $('#shutter').text(data.shutter);
-                $('#iso').text(data.iso);
-                $('#date').text(data.datetaken);
-                $('#hits').text(data.hits);
-                $('#desc').text(data.description);
-
-                //positioning
-                positionPhoto($this);
-
-                //Show
-                $("#view-container-overlay").fadeOut(200);
-        });
-        }).fail(function () {
-            closeViewer();
-        }
-        );  
-
-    }
-
-    function showPhotoOverlay()
-    {
-        //$("#view-container-overlay").fadeIn(200);
-        $("#photoloader").show();
-    }
-
-    function closeViewer()
-    {
-        $("#overlay").fadeOut(400);
-        $("#view-container").hide();
-        $("body").css("overflow", "auto");
-        vieweropen = false;
-        renderGallery();
-    }
-
-    function openViewer()
-    {
-        $("#overlay").fadeIn(400);
-        $("body").css("overflow", "hidden");
-        $("#view-container").hide();
-        vieweropen = true;
-    }
-   
-    $("#overlay").click(function () {
-        closeViewer();
-    });
-
-    $("#view-container").click(function () {
-        closeViewer();
-    });
-            
-    $("#close-button").click(function () {
-        closeViewer();
-    });
-
-    $("#view-container-rightnav").click(function (event) {
-            var $this = $(this);
-            var $next = $container.find("li[img-id=" + curphotoid + "]").next("li");
-
-            if ($next.length !=0) {
-                var photoid = $next.attr("img-id");
-                if (photoid != 0) {
-                    showPhotoOverlay();
-                    loadPhoto(photoid);
-                }
-            }
-            else
-            {
-                scrollLoadMore(null, function(){
-                    $this.click();
-                });
-            }
-
-            event.stopPropagation();
-
-    });
-
-    $("#view-container-leftnav").click(function (event) {
-        var $this = $(this);
-        var $prev = $container.find("li[img-id=" + curphotoid + "]").prev("li");
-
-        if ($prev.length != 0) {
-            var photoid = $prev.attr("img-id");
-            if (photoid != 0) {
-                showPhotoOverlay();
-                loadPhoto(photoid);
-            }
-        }
-
-        event.stopPropagation();
-    });
-
     $(document).keyup(function (event) {
         if (!event)
             event = window.event;
@@ -577,12 +445,304 @@ $(document).ready(function () {
                 event.preventDefault();
                 break;
         }
-        
+
+    });
+
+    $(document).swipe(swipeOptions);
+
+    function endSwipe() {
+        $("#photocontainer").css({
+            '-webkit-transform': 'none',
+            '-moz-transform': 'none',
+            '-ms-transform': 'none',
+            '-o-transform': 'none',
+            'transform': 'none'
+        });
+    }
+
+    function onSwipe(event, phase, direction, distance) {
+        if (vieweropen) {
+            var $photocontainer = $("#photocontainer");
+
+            if (phase == "move" && (direction == "left" || direction == "right")) {
+                var duration = 0;
+
+
+                if (direction == "left") {
+                    $photocontainer.css({
+                        '-webkit-transform': 'translateX(-' + distance + 'px)',
+                        '-moz-transform': 'translateX(-' + distance + 'px)',
+                        '-ms-transform': 'translateX(-' + distance + 'px)',
+                        '-o-transform': 'translateX(-' + distance + 'px)',
+                        'transform': 'translateX(-' + distance + 'px)'
+                    });
+                } else if (direction == "right") {
+                    $photocontainer.css({
+                        '-webkit-transform': 'translateX(' + distance + 'px)',
+                        '-moz-transform': 'translateX(' + distance + 'px)',
+                        '-ms-transform': 'translateX(' + distance + 'px)',
+                        '-o-transform': 'translateX(' + distance + 'px)',
+                        'transform': 'translateX(' + distance + 'px)'
+                    });
+                }
+
+            } else if (phase == "cancel") {
+                endSwipe();
+            } else if (phase == "end") {
+                endSwipe();
+
+                if (direction == "right") {
+                    $("#view-container-leftnav").click();
+                } else if (direction == "left") {
+                    $("#view-container-rightnav").click();
+                }
+            }
+        }
+    }
+
+
+    $container.on("click",".photo-box-link",
+        function (event) {
+            var $this = $(this);
+
+            event.preventDefault();
+
+            var photoid = $this.attr("img-id");
+
+            openViewer();
+            showPhotoOverlay();
+            loadPhoto(photoid);
+        }
+    );
+
+    function positionPhoto($image)
+    {
+        endSwipe();
+
+        var $photoinfo = $("#photo-info");
+        var $protect = $("#protect");
+        var $videoplay = $("#videoplay");
+        var $videoviewer = $("#video-view");
+                
+        var $photocontainer = $("#photocontainer");
+        var containerheight = $photocontainer.outerHeight();
+        $photocontainer.css("padding-top", 0);
+        var totalheight = $image.outerHeight() + $photoinfo.outerHeight();
+
+        var padding = 0;
+        if (totalheight < containerheight) {
+            padding = Math.round(containerheight / 2) - Math.round(totalheight / 2);
+        }
+
+        $image.css('max-height', containerheight - $photoinfo.outerHeight());
+
+        $photocontainer.css("padding-top", padding);
+        $photoinfo.css('max-width', $image.outerWidth());
+
+        $protect.css('margin-top', padding);
+        $protect.css('max-height', $image.outerHeight());
+
+        $videoplay.css('margin-top', padding);
+        $videoplay.css('max-height', $image.outerHeight());
+
+        $videoviewer.css('margin-top', padding);
+        $videoviewer.css('max-height', $image.outerHeight());
+        $videoviewer.css("max-width", $image.outerWidth());
+        $videoviewer.css("margin-right", $image.css("margin-right"));
+        $videoviewer.css("margin-left", $image.css("margin-left"));
+    }
+
+    function loadPhoto(photoid)
+    {
+        $.ajax({
+            type: 'GET',
+            url: "PhotoLoader.cshtml?photoid=" + photoid,
+            datatype: 'json',
+            cache: true
+        }).done(function (data) {
+            curphotoid = photoid;
+
+            $('#viewer').attr('src', data.path).one("load", function () {
+                var $this = $(this);
+                $("#photoloader").hide();
+                $("#view-container").show();
+                $this.show();
+                //write image data
+                $('#name').text(data.name);
+                $('#camera').text(data.camera);
+                $('#lens').text(data.lens);
+                $('#aperture').text(data.aperture);
+                $('#shutter').text(data.shutter);
+                $('#iso').text(data.iso);
+                $('#date').text(data.datetaken);
+                $('#hits').text(data.hits);
+                $('#desc').text(data.description);
+                $('#place').text(data.place);
+
+                if (data.hasstock == "1")
+                {
+                    $('#hasstock').show();
+                }
+                else
+                {
+                    $('#hasstock').hide();
+                }
+
+                if (albumid === 0)
+                {
+                    var $link = $("#albumlink");
+
+                    $link.attr("href", "PhotoGallery.cshtml?album=" + data.albumid);
+                    $link.text(data.albumname);
+
+                    $("#albuminfo").show();
+
+                }
+                else
+                {
+                    $("#albuminfo").hide();
+                }
+
+                if (data.videoid != "") {
+                    $("#videoplay").show();
+                    $("#videolink").attr("video-id", data.videoid);
+                }
+                else {
+                    $("#videoplay").hide();
+                }
+
+                //positioning
+                positionPhoto($this);
+                         
+
+                //Show
+                $("#view-container-overlay").fadeOut(200);
+        });
+        }).fail(function () {
+            closeViewer();
+        }
+        );  
+
+    }
+
+    function showPhotoOverlay()
+    {
+        //$("#view-container-overlay").fadeIn(200);
+        $("#photoloader").show();
+    }
+
+    function closeVideo()
+    {
+        var $video = $("#video-view");
+        $video.attr("src", "");
+        $video.hide();
+    }
+
+    function closeViewer()
+    {
+        $("videoplay").hide();
+        closeVideo();
+        $("#overlay").fadeOut(400);
+        $("#view-container").hide();
+        $("body").css("overflow", "auto");
+        vieweropen = false;
+        renderGallery();
+    }
+
+    function openViewer()
+    {
+        $("#overlay").fadeIn(400);
+        $("body").css("overflow", "hidden");
+        $("#view-container").hide();
+        vieweropen = true;
+    }
+
+
+
+    function openVideoViewer(videoid)
+    {
+        var $video = $("#video-view");
+        var $view = $('#viewer');
+        var embedlink = youtubeembed;
+
+        //$video.css("max-width", $view.outerWidth());
+        //$video.css("max-height", $view.outerHeight());
+        //$video.css("margin-right", $view.css("margin-right"));
+        //$video.css("margin-left", $view.css("margin-left"));
+
+        $video.attr("src", embedlink.replace("{0}", videoid));
+
+        $video.show();
+
+    }
+
+    
+
+    $("#overlay").click(function () {
+        closeViewer();
+    });
+
+    $("#view-container").click(function () {
+        closeViewer();
+    });
+            
+    $("#close-button").click(function () {
+        closeViewer();
+    });
+
+    $("#view-container-rightnav").click(function (event) {
+            var $this = $(this);
+            var $next = $container.find("li[img-id=" + curphotoid + "]").next("li");
+
+            if ($next.length !=0) {
+                var photoid = $next.attr("img-id");
+                if (photoid != 0) {
+                    closeVideo();
+                    showPhotoOverlay();
+                    loadPhoto(photoid);
+                }
+            }
+            else
+            {
+                scrollLoadMore(null, function(){
+                    $this.click();
+                });
+            }
+            event.stopPropagation();
+
+    });
+
+    $("#view-container-leftnav").click(function (event) {
+        var $this = $(this);
+        var $prev = $container.find("li[img-id=" + curphotoid + "]").prev("li");
+
+        if ($prev.length != 0) {
+            var photoid = $prev.attr("img-id");
+            if (photoid != 0) {
+                closeVideo();
+                showPhotoOverlay();
+                loadPhoto(photoid);
+            }
+        }
+        event.stopPropagation();
     });
 
     $.event.trigger({
         type : "galleryloaded"
     });
+
+    $("#videolink").click(
+        function (event) {
+            var $this = $(this);
+
+            event.preventDefault();
+
+            var videoid = $this.attr("video-id");
+
+            openVideoViewer(videoid);
+
+            event.stopPropagation();
+        });
 
     //Set acceptables
     acceptableHeight = ((mode === "album") || (mode === "galleries")) ? 420 : 270;
