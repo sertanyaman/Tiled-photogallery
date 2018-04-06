@@ -1,22 +1,22 @@
 # Tiled Photo Gallery by Tayfun Sertan Yaman
 
-A responsive, animated jquery photo gallery plugin which arranges your photos in tiled rows, supports photo previews, infinite scroll, swipe navigation for mobile devices, CSS3 animations and ajax server side image loading.
+A responsive, animated html5 photo gallery library which arranges your photos in tiled rows, supports photo previews, infinite scroll, swipe navigation for mobile devices, video embedding, CSS3 animations and ajax server side image loading.
 
 ## Getting Started
 
-For a demo of how plugin works, check: http://www.sertanyaman.com/PhotoGallery.cshtml?mode=vitrine
+For a demo of how this library works, check: http://www.sertanyaman.com/PhotoGallery.cshtml?mode=vitrine
 
 ### Installing
 
-Download the script and its CSS file from the 'src' folder and HTML template from src\html folder. Add the 3rd party plugins listed below. Check the page structure plugin uses in the provided HTML template to get started. 
+Download the library and its CSS file from the 'src' folder and HTML template from src\html folder. Add the 3rd party plugins listed below to your project. Check the page structure in the provided HTML template to get started. 
 
-You need to write a server-side ajax photo feeder (for infinite scrolling and thumbnail loading) and a photo loader (for loading full sized photos when you click on the thumbnails or navigating) for plugin to work properly. See the examples in the 'example' folder, there is a fully working ASP.NET Web Pages example with instructions.
+You need to write a server-side ajax photo feeder (for infinite scrolling and thumbnail loading) and a photo loader (for loading full sized photos when you click on the thumbnails or navigating) for script to work properly. See the examples in the 'example' folder, there is a fully working ASP.NET Web Pages example with instructions.
 
 Alternatively you can modify the script to work in non-dynamic HTML pages and add all your photos like shown in the template.
 
 For more information on installation and the examples provided about the library, visit my blog post at :
 
-http://devblog.sertanyaman.com/
+http://devblog.sertanyaman.com/how-to-use-the-tiled-photogallery-library-by-sertanyaman-com/
 
 ### 3rd party libraries
 
