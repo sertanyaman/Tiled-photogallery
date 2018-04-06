@@ -1,15 +1,16 @@
 ﻿/*!
- * Tile Photogallery v1.0
- * Tiled photogallery with photo preview
+ * Tiled Photogallery v1.1
+ * Tiled photo gallery with photo preview, animations and youtube embedding
  * http://www.sertanyaman.com
  * MIT License
  * by Tayfun Sertan Yaman
+ * https://github.com/sertanyaman/Tiled-photogallery
  */
 var $container;
 var galleryWidth;
 var scrollbarwidth;
-var acceptableHeight =  150;
-var maxHeight =300;
+var acceptableHeight = 150;
+var maxHeight = 300;
 var rowcount = 0;
 var rowheight = [];
 var photomargin = 5;
@@ -20,10 +21,8 @@ var idCounter = 0;
 var vieweropen = false;
 var curphotoid = 0;
 
-
-
 function triggerGallery() {
-   
+
     if (!$container) {
         return;
     }
@@ -45,11 +44,10 @@ WebFont.load({
 
 ///SERTAN Photo gallery
 
-function renderGallery()
-{
+function renderGallery() {
     rowcount = 1;
     rowheight = [];
-    var $images = $container.find(".photo-box");  
+    var $images = $container.find(".photo-box");
     placeinGallery($images, true);
 }
 
@@ -73,16 +71,15 @@ function getScrollBarWidth() {
     var w1 = inner.offsetWidth;
     outer.style.overflow = 'scroll';
     var w2 = inner.offsetWidth;
-    if (w1 == w2) w2 = outer.clientWidth;
+    if (w1 === w2) w2 = outer.clientWidth;
 
     document.body.removeChild(outer);
 
     return (w1 - w2);
-};
+}
 
 //Place them in gallery
-function placeinGallery($images, reset)
-{
+function placeinGallery($images, reset) {
     var d = $.Deferred();
     galleryWidth = Math.max($container.innerWidth(), minWidth);
     scrollbarwidth = getScrollBarWidth();
@@ -90,17 +87,17 @@ function placeinGallery($images, reset)
     prevWidth = galleryWidth;
 
     if (!vieweropen && ($container.height() <= $(window).height())) {
-        if (galleryWidth == $("body").width())
-            galleryWidth = galleryWidth - scrollbarwidth
+        if (galleryWidth === $("body").width())
+            galleryWidth = galleryWidth - scrollbarwidth;
     }
 
     var currow = rowcount;
     var curheight = 0;
 
-    if(rowheight[rowcount]!== undefined && rowheight[rowcount]!== 0){
+    if (rowheight[rowcount] !== undefined && rowheight[rowcount] !== 0) {
         curheight = rowheight[rowcount];
-    } 
-    else{
+    }
+    else {
         curheight = acceptableHeight;
         rowheight[rowcount] = curheight;
     }
@@ -118,7 +115,7 @@ function placeinGallery($images, reset)
             var imgheight = parseInt($image.attr("img-height"));
             var photoid = $image.attr("img-id");
 
-            if (imgheight != curheight) {
+            if (imgheight !== curheight) {
                 imgwidth = Math.floor(imgwidth * (curheight / imgheight));
             }
 
@@ -126,15 +123,14 @@ function placeinGallery($images, reset)
             photoids.push(photoid);
         });
     }
-    
-    $images.each(function(){
+
+    $images.each(function () {
         var $image = $(this);
         var imgwidth = parseInt($image.attr("img-width"));
         var imgheight = parseInt($image.attr("img-height"));
         var photoid = $image.attr("img-id");
 
-        if(imgheight!= curheight)
-        {
+        if (imgheight !== curheight) {
             imgwidth = Math.floor(imgwidth * (curheight / imgheight));
         }
 
@@ -145,83 +141,78 @@ function placeinGallery($images, reset)
     //place in rows
     var imgindex = 0;
 
-        while(imgindex < photoids.length)
-        {
-            var totalwidth=0, localwidth=0;
-            var indexstart = imgindex;
+    while (imgindex < photoids.length) {
+        var totalwidth = 0, localwidth = 0;
+        var indexstart = imgindex;
 
-            var ratiox = 1;
-            var ratioy = 1;
+        var ratiox = 1;
+        var ratioy = 1;
 
-            while (localwidth < galleryWidth)
-            {
-                localwidth += rowwidths[imgindex];
+        while (localwidth < galleryWidth) {
+            localwidth += rowwidths[imgindex];
 
-                if (localwidth < galleryWidth) {
-                    totalwidth = localwidth;
-                    imgindex++
-                }
-                else
-                if (imgindex == indexstart)
-                {
+            if (localwidth < galleryWidth) {
+                totalwidth = localwidth;
+                imgindex++;
+            }
+            else
+                if (imgindex === indexstart) {
                     totalwidth = galleryWidth;
                     ratioy = (galleryWidth / localwidth);
                     imgindex++;
-                }               
-
-                if(imgindex == photoids.length)
-                {
-                    break;
                 }
+
+            if (imgindex === photoids.length) {
+                break;
             }
-        
-            if (!((imgindex == photoids.length) && (totalwidth < galleryWidth))) {
-                var ratiox = (galleryWidth / totalwidth);
-            }
-     
-            if (ratioy == 1)//No override
-            {
-                ratioy = ratiox;
-            }            
-               
-            curheight = Math.min(Math.floor(curheight * ratioy), maxHeight);
-        
-            totalwidth = 0;
-            var i = 0;
-
-            for(i = indexstart; i<imgindex;i++)
-            {
-                var curid = photoids[i];
-                var curwidth = Math.min(rowwidths[i], galleryWidth);
-                var $curbox = $container.find("div[img-id='"+curid+"']");
-
-                curwidth = Math.floor(curwidth * ratiox);
-
-                $curbox.css("width", curwidth+"px");
-                $curbox.css("height", curheight+"px");
-                $curbox.css("display", "block");
-                $curbox.attr("img-row", rowcount);
-                $curbox.css("transition-delay");
-                $curbox.css("transition-delay", i/4 + "s");
-                $curbox.css("opacity", 1);
-
-                totalwidth+=curwidth;            
-            }
-
-            rowheight[rowcount] = curheight;
-            if (imgindex < photoids.length)
-                rowcount++;
-            curheight = acceptableHeight;
         }
 
-        setTimeout(function () {
-            loading = false;
-            nextpagetriggered = false;
-            d.resolve();
-            $(document).trigger("galleryloaded");
+        if (!((imgindex === photoids.length) && (totalwidth < galleryWidth))) {
+            ratiox = (galleryWidth / totalwidth);
         }
+
+        if (ratioy === 1)//No override
+        {
+            ratioy = ratiox;
+        }
+
+        curheight = Math.min(Math.floor(curheight * ratioy), maxHeight);
+
+        totalwidth = 0;
+        var i = 0;
+
+        for (i = indexstart; i < imgindex; i++) {
+            var curid = photoids[i];
+            var curwidth = Math.min(rowwidths[i], galleryWidth);
+            var $curbox = $container.find("div[img-id='" + curid + "']");
+
+            curwidth = Math.floor(curwidth * ratiox);
+
+            $curbox.css("width", curwidth + "px");
+            $curbox.css("height", curheight + "px");
+            $curbox.css("display", "block");
+            $curbox.attr("img-row", rowcount);
+            $curbox.css("transition-delay");
+            $curbox.css("transition-delay", i / 4 + "s");
+            $curbox.css("opacity", 1);
+
+            totalwidth += curwidth;
+        }
+
+        rowheight[rowcount] = curheight;
+        if (imgindex < photoids.length)
+            rowcount++;
+        curheight = acceptableHeight;
+    }
+
+    setTimeout(function () {
+        loading = false;
+        nextpagetriggered = false;
+        d.resolve();
+        $(document).trigger("galleryloaded");
+    }
         , (((imgindex) / 4) + 0.5) * 1000);
-        
+
 }
 
 function loadMore(url, page, maxphotos, callback) {
@@ -263,7 +254,7 @@ $(document).ready(function () {
         fingers: 1,
         excludedElements: "select, textarea, .noSwipe"
     };
-    
+
     $("#albumloader").show();
 
     (function ($, sr) {
@@ -288,7 +279,7 @@ $(document).ready(function () {
 
                 timeout = setTimeout(delayed, threshold || 100);
             };
-        }
+        };
         // smartresize 
         jQuery.fn[sr] = function (fn) { return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr); };
 
@@ -301,12 +292,12 @@ $(document).ready(function () {
             return this.filter(function (i, elem) {
                 return $.css(elem, 'display') === 'none' || !$.contains(elem.ownerDocument, elem);
             })
-                        .css('opacity', 0)
-                        .show()
-                        .end()
-                    .transition({
-                        opacity: 0.85
-                    }, speed, easing, callback);
+                .css('opacity', 0)
+                .show()
+                .end()
+                .transition({
+                    opacity: 0.85
+                }, speed, easing, callback);
         };
 
         $.fn.fadeOut = function (speed, easing, callback) {
@@ -352,10 +343,10 @@ $(document).ready(function () {
             $("#albumloader").hide();
             var $html = $(html);
 
-            if (html.trim() != "") {
+            if (html.trim() !== "") {
                 $("#photo-list").append($html);
 
-                if (typeof callback != 'undefined') {
+                if (typeof callback !== 'undefined') {
                     callback();
                 }
 
@@ -363,7 +354,7 @@ $(document).ready(function () {
                     finished: function () {
                         var $images = $html.find(".photo-box");
                         placeinGallery($images, false);
-                        
+
                     },
                     waitForAll: true
                 });
@@ -372,11 +363,11 @@ $(document).ready(function () {
         });
     }
 
-  
-    $(window).smartresize(function(){
-        var myId=(++idCounter);
-        setTimeout(function(){
-            if(myId===idCounter){
+
+    $(window).smartresize(function () {
+        var myId = (++idCounter);
+        setTimeout(function () {
+            if (myId === idCounter) {
                 var containerwidth = $container.innerWidth();
 
                 if (containerwidth < minWidth) return;
@@ -385,20 +376,19 @@ $(document).ready(function () {
                     renderGallery();
                 }
 
-                if(vieweropen)
-                {
+                if (vieweropen) {
                     positionPhoto($("#viewer"));
                 }
             }
         }, 100);
-                
-    }); 
+
+    });
 
     $(window).scroll(function () {
         if (page < pagetotal) {
             var criticalpos = ($(document).height() - $(window).height() - $("footer").height());
             var currentpos = $(window).scrollTop();
-            if (currentpos != 0 && currentpos > criticalpos) {
+            if (currentpos !== 0 && currentpos > criticalpos) {
 
 
                 $("#albumloader").show();
@@ -422,7 +412,7 @@ $(document).ready(function () {
         if (!event)
             event = window.event;
         var code = event.keyCode;
-        if (event.charCode && code == 0)
+        if (event.charCode && code === 0)
             code = event.charCode;
 
         switch (code) {
@@ -464,11 +454,11 @@ $(document).ready(function () {
         if (vieweropen) {
             var $photocontainer = $("#photocontainer");
 
-            if (phase == "move" && (direction == "left" || direction == "right")) {
+            if (phase === "move" && (direction === "left" || direction === "right")) {
                 var duration = 0;
 
 
-                if (direction == "left") {
+                if (direction === "left") {
                     $photocontainer.css({
                         '-webkit-transform': 'translateX(-' + distance + 'px)',
                         '-moz-transform': 'translateX(-' + distance + 'px)',
@@ -476,7 +466,7 @@ $(document).ready(function () {
                         '-o-transform': 'translateX(-' + distance + 'px)',
                         'transform': 'translateX(-' + distance + 'px)'
                     });
-                } else if (direction == "right") {
+                } else if (direction === "right") {
                     $photocontainer.css({
                         '-webkit-transform': 'translateX(' + distance + 'px)',
                         '-moz-transform': 'translateX(' + distance + 'px)',
@@ -486,14 +476,14 @@ $(document).ready(function () {
                     });
                 }
 
-            } else if (phase == "cancel") {
+            } else if (phase === "cancel") {
                 endSwipe();
-            } else if (phase == "end") {
+            } else if (phase === "end") {
                 endSwipe();
 
-                if (direction == "right") {
+                if (direction === "right") {
                     $("#view-container-leftnav").click();
-                } else if (direction == "left") {
+                } else if (direction === "left") {
                     $("#view-container-rightnav").click();
                 }
             }
@@ -501,7 +491,7 @@ $(document).ready(function () {
     }
 
 
-    $container.on("click",".photo-box-link",
+    $container.on("click", ".photo-box-link",
         function (event) {
             var $this = $(this);
 
@@ -515,15 +505,14 @@ $(document).ready(function () {
         }
     );
 
-    function positionPhoto($image)
-    {
+    function positionPhoto($image) {
         endSwipe();
 
         var $photoinfo = $("#photo-info");
         var $protect = $("#protect");
         var $videoplay = $("#videoplay");
         var $videoviewer = $("#video-view");
-                
+
         var $photocontainer = $("#photocontainer");
         var containerheight = $photocontainer.outerHeight();
         $photocontainer.css("padding-top", 0);
@@ -552,8 +541,7 @@ $(document).ready(function () {
         $videoviewer.css("margin-left", $image.css("margin-left"));
     }
 
-    function loadPhoto(photoid)
-    {
+    function loadPhoto(photoid) {
         $.ajax({
             type: 'GET',
             url: "PhotoLoader.cshtml?photoid=" + photoid,
@@ -579,17 +567,14 @@ $(document).ready(function () {
                 $('#desc').text(data.description);
                 $('#place').text(data.place);
 
-                if (data.hasstock == "1")
-                {
+                if (data.hasstock === "1") {
                     $('#hasstock').show();
                 }
-                else
-                {
+                else {
                     $('#hasstock').hide();
                 }
 
-                if (albumid === 0)
-                {
+                if (albumid === 0) {
                     var $link = $("#albumlink");
 
                     $link.attr("href", "PhotoGallery.cshtml?album=" + data.albumid);
@@ -598,12 +583,11 @@ $(document).ready(function () {
                     $("#albuminfo").show();
 
                 }
-                else
-                {
+                else {
                     $("#albuminfo").hide();
                 }
 
-                if (data.videoid != "") {
+                if (data.videoid !== "") {
                     $("#videoplay").show();
                     $("#videolink").attr("video-id", data.videoid);
                 }
@@ -613,33 +597,30 @@ $(document).ready(function () {
 
                 //positioning
                 positionPhoto($this);
-                         
+
 
                 //Show
                 $("#view-container-overlay").fadeOut(200);
-        });
+            });
         }).fail(function () {
             closeViewer();
         }
-        );  
+            );
 
     }
 
-    function showPhotoOverlay()
-    {
+    function showPhotoOverlay() {
         //$("#view-container-overlay").fadeIn(200);
         $("#photoloader").show();
     }
 
-    function closeVideo()
-    {
+    function closeVideo() {
         var $video = $("#video-view");
         $video.attr("src", "");
         $video.hide();
     }
 
-    function closeViewer()
-    {
+    function closeViewer() {
         $("videoplay").hide();
         closeVideo();
         $("#overlay").fadeOut(400);
@@ -649,8 +630,7 @@ $(document).ready(function () {
         renderGallery();
     }
 
-    function openViewer()
-    {
+    function openViewer() {
         $("#overlay").fadeIn(400);
         $("body").css("overflow", "hidden");
         $("#view-container").hide();
@@ -659,8 +639,7 @@ $(document).ready(function () {
 
 
 
-    function openVideoViewer(videoid)
-    {
+    function openVideoViewer(videoid) {
         var $video = $("#video-view");
         var $view = $('#viewer');
         var embedlink = youtubeembed;
@@ -676,7 +655,7 @@ $(document).ready(function () {
 
     }
 
-    
+
 
     $("#overlay").click(function () {
         closeViewer();
@@ -685,30 +664,29 @@ $(document).ready(function () {
     $("#view-container").click(function () {
         closeViewer();
     });
-            
+
     $("#close-button").click(function () {
         closeViewer();
     });
 
     $("#view-container-rightnav").click(function (event) {
-            var $this = $(this);
-            var $next = $container.find("li[img-id=" + curphotoid + "]").next("li");
+        var $this = $(this);
+        var $next = $container.find("li[img-id=" + curphotoid + "]").next("li");
 
-            if ($next.length !=0) {
-                var photoid = $next.attr("img-id");
-                if (photoid != 0) {
-                    closeVideo();
-                    showPhotoOverlay();
-                    loadPhoto(photoid);
-                }
+        if ($next.length !== 0) {
+            var photoid = $next.attr("img-id");
+            if (photoid !== 0) {
+                closeVideo();
+                showPhotoOverlay();
+                loadPhoto(photoid);
             }
-            else
-            {
-                scrollLoadMore(null, function(){
-                    $this.click();
-                });
-            }
-            event.stopPropagation();
+        }
+        else {
+            scrollLoadMore(null, function () {
+                $this.click();
+            });
+        }
+        event.stopPropagation();
 
     });
 
@@ -716,9 +694,9 @@ $(document).ready(function () {
         var $this = $(this);
         var $prev = $container.find("li[img-id=" + curphotoid + "]").prev("li");
 
-        if ($prev.length != 0) {
+        if ($prev.length !== 0) {
             var photoid = $prev.attr("img-id");
-            if (photoid != 0) {
+            if (photoid !== 0) {
                 closeVideo();
                 showPhotoOverlay();
                 loadPhoto(photoid);
@@ -728,7 +706,7 @@ $(document).ready(function () {
     });
 
     $.event.trigger({
-        type : "galleryloaded"
+        type: "galleryloaded"
     });
 
     $("#videolink").click(
@@ -746,9 +724,8 @@ $(document).ready(function () {
 
     //Set acceptables
     acceptableHeight = ((mode === "album") || (mode === "galleries")) ? 420 : 270;
-    maxHeight = ( (mode === "album") || (mode === "galleries"))? 420 : 400;
+    maxHeight = ((mode === "album") || (mode === "galleries")) ? 420 : 400;
 
 });
 
 
-    

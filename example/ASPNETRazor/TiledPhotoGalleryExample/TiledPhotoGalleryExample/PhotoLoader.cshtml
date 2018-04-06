@@ -1,0 +1,13 @@
+﻿@{
+    uint photoid = (uint)Request.QueryString["photoid"].AsInt();
+    string jsonstr;
+
+    //Return your own json for your photo including the EXIF, in exactly the same format below
+    jsonstr = "{\"path\":\"/Photos/0/Photo"+photoid+".jpg\",\"name\":\"Test viewer\",\"hits\":\"188\",\"description\":\"\",\"camera\":\"NIKON D7200\",\"lens\":\"Nikon 300mm f4 PF\",\"focal\":\"420mm\",\"aperture\":\"f8\",\"shutter\":\"1 / 1600\",\"iso\":\"1800\",\"datetaken\":\"20 - 4 - 2016\",\"place\":\"Netherlands\",\"albumid\":\"56\",\"albumname\":\"Wildlife 2016 Album 3\",\"hasstock\":\"0\",\"videoid\":\"\"}";
+
+    Response.Clear();
+    Response.ContentType = "application/json; charset=utf-8";
+    Response.Write(jsonstr);
+    Response.End();
+
+}

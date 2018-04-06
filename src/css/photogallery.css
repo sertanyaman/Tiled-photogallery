@@ -38,7 +38,7 @@
     height:0px;
 	border:5px;
     border-style:solid;
-   border-color:#CECCC0;
+    border-color:transparent;
     vertical-align:central;
     text-align:center;
     background-position: center;
@@ -529,7 +529,7 @@ div.photo-info h2 {
 
 div.main-content,
 div.main-content-box{
-    background-color:#CECCC0;
+    background-color:transparent;
 }
 
 div.photo-content figure

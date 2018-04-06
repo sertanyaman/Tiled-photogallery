@@ -1,0 +1,25 @@
+﻿@{
+    int page = Request.Form["page"].AsInt();
+    int maxphotos = Request.Form["maxphotos"].AsInt();
+    uint albumid = (uint)Request.QueryString["album"].AsInt();
+    uint categoryid = (uint)Request.QueryString["cat"].AsInt();
+    uint galleryid = (uint)Request.QueryString["gallery"].AsInt();
+    string mode = Request.QueryString["mode"];
+}
+
+@{
+    //Do your own database query using on the parameters given above (including page) and display them using custom helpers
+
+    switch (mode)
+    {
+        case "album":
+            <text>@CustomHelpers.DrawAlbums(maxphotos)</text>
+            break;
+
+        default:
+            <text>@CustomHelpers.DrawThumbnails(maxphotos)</text>
+            break;
+    }
+
+}
+

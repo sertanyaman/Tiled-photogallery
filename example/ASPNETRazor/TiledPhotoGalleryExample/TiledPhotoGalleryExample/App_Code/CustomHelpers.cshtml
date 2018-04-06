@@ -1,0 +1,119 @@
+﻿@helper DrawPhotoBox(string albumid, string thumbnail, string photoid, int width, int height, string name, uint hits, string videoid = "")
+    {
+        <div class="photo-box" img-id="@photoid" img-width="@width" img-height="@height" img-row="0" style="background-image:url('/Thumbs/@albumid/@thumbnail');">
+            <a href="PhotoViewer.cshtml?photoid=@photoid" img-id="@photoid" video="@videoid" class="photo-box-link" target="_blank">
+                <div class="photo-overlay">
+                    <div class="overlaybar">
+                        <span>@name</span>
+                        <span class="photo-box-icon"><i class="fa fa-eye"></i>&nbsp;@hits</span>
+                    </div>
+                    @if (!String.IsNullOrEmpty(videoid))
+                    {
+                        <div class="play">
+                            <div class="playicon">
+                                <i class="fa fa-play-circle-o"></i>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+
+            </a>
+        </div>
+}
+
+@helper DrawAlbumBox(string albumid, string cover, string name, int width, int height)
+    {
+        <div class="photo-box" img-id="@albumid" img-row="0" img-width="@width" img-height="@height" style="background-image:url('/Covers/@albumid/@cover');">
+            <a href="PhotoGallery.cshtml?album=@albumid" class="">
+                <div class="photo-overlay-album">
+                    <div class="overlaybar">
+                        <span>@name</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+}
+
+@helper DrawAlbums(int maxphotos = 20)
+    {
+        //Used to draw albums
+        string cover = "", albumid = "", name = "";
+        int photocount = 0, width = 0, height = 0;
+
+        for (int i = 1; i < 5; i++)
+        {
+            albumid = i.ToString();
+            cover = "thumb_Photo" + i + ".jpg";
+            width = 640;
+            height = 640;
+            name = "Photo" + i;
+
+            @:<li>
+                @CustomHelpers.DrawAlbumBox(albumid, cover, name, width, height);
+                photocount++;
+                @:</li>
+
+
+            if (photocount >= maxphotos)
+            {
+                break;
+            }
+        }
+}
+
+@functions {
+    //for demo, thumbnail width and height
+    struct WH
+    {
+        public int width, height;
+
+        public WH(int w, int h)
+        {
+            width = w;
+            height = h;
+        }
+    }
+
+}
+
+    @helper DrawThumbnails(int maxphotos = 20)
+    {
+
+string thumbnail = "", albumid = "", photoid = "", name = "", videoid = "";
+int photocount = 0, width = 0, height = 0;
+uint hits = 0;
+
+WH[] widthHeight = new[]
+{
+        new WH(0,0),
+        new WH(640,640),
+        new WH(436,640),
+        new WH(640,413),
+        new WH(640,426)
+    };
+
+for (int i = 1; i < 5; i++)
+{
+    photoid = i.ToString();
+    thumbnail = "thumb_Photo" + i + ".jpg";
+    albumid = "0";
+    width = widthHeight[i].width;
+    height = widthHeight[i].height;
+    name = "Photo" + i;
+    hits = (uint)i * 10;
+    videoid = "";
+
+        @:<li img-id="@photoid">
+            @CustomHelpers.DrawPhotoBox(albumid, thumbnail, photoid, width, height, name, hits, videoid);
+            photocount++;
+            @:</li>
+
+        if (photocount >= maxphotos)
+        {
+            break;
+        }
+    }
+
+
+}

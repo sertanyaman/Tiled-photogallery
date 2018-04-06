@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +8,7 @@
 <meta name="description" content="">
 <meta name="author" content="Tayfun Sertan Yaman">
 
-    <title>Example Photo gallery usage</title>
+    <title>Photo gallery template</title>
 
     <!-- Custom styles for this template -->
 
@@ -30,11 +30,12 @@
         var categoryid = 0;
         var galleryid = 2;
         var tagname = "";
+		var youtubeembed = "https://www.youtube.com/embed/{0}?autoplay=1";
         var feedurl = "/PhotoFeeder.cshtml";
              feedurl+= "?mode=vitrine" ;
         var mode = "vitrine";
     </script>
-    <script src="./Scripts/photogallery.js"></script>
+    <script src="./photogallery.js"></script>
 
 </head>
 
@@ -155,13 +156,22 @@
                 <button type="button" title="Right (Right arrow)" class="photo-navicon photo-navicon-right" id="view-container-rightnav"><i class="fa fa-chevron-right"></i></button>
                 <button type="button" title="Left (Left arrow)" class="photo-navicon photo-navicon-left" id="view-container-leftnav"><i class="fa fa-chevron-left"></i></button>
                 
-            <figure id="photocontainer">      
-                    <img class="photo-viewer" id="viewer">
-                    <img class="photo-protector" id="protect" src="./Personal webpage of Tayfun Sertan Yaman_files/blank.gif">
-                    <figcaption>
-                        <div class="photo-info" id="photo-info">
-                            <table>
-                                <tbody><tr>
+            <figure id="photocontainer">
+                <img class="photo-viewer" id="viewer">
+                <img class="photo-protector" id="protect" src="./Images/blank.gif">
+                <div class="photo-videoplaylink" id="videoplay">
+                    <div class="linkcontainer">
+                        <a href="" id="videolink" video-id="">
+                            <i class="fa fa-play-circle-o"></i>
+                        </a>
+                    </div>
+                </div>
+                <iframe class="youtubeviewer" id="video-view" src="" frameborder="0" allowfullscreen autoplay></iframe>
+                <figcaption>
+                    <div class="photo-info" id="photo-info">
+                        <table>
+                            <tbody>
+                                <tr>
                                     <td width="200px">
                                         <span class="wicon-camera2 iconlarge" align="left" style="float:left;margin:2px;"></span>
                                         <div class="camerainfopart"><span class="camerainfo" id="camera"></span></div>
@@ -171,12 +181,18 @@
                                     </td>
                                     <td>
                                         <h2><span id="name"></span></h2>
-                                        <div class="camerainfopart">Date <span class="camerainfo" id="date"></span> </div><br>
+                                        <div class="camerainfopart">Date: <span class="camerainfo" id="date">&nbsp; Place: </span><span class="camerainfo" id="place"></span> </div><br>
+                                        <div class="camerainfopart" id="albuminfo">
+                                            Album:<span class="camerainfo"><a href="#" id="albumlink" class="infoalbumlink"></a></span>
+                                        </div>
                                         <span id="desc"></span>
-                            </td></tr></tbody></table>
-                        </div>
-                    </figcaption>
-             </figure>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </figcaption>
+            </figure>
         </div>
        </div>
 

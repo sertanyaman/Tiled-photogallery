@@ -1,0 +1,145 @@
+﻿@{ 
+
+    //maximum amount of photos per scroll
+    const int maxphotos = 20;
+    //num of pages, get from database grandphotocount/maxphotos
+    int pagetotal = 10;
+    //current page, get from querystring or set to 1
+    int page = 1;
+    //site specific, you can create galleries, albums or just load thumbnails of pictures, see sertanyaman.com for an example
+    uint albumid = (uint)Request.QueryString["album"].AsInt();
+    uint categoryid = (uint)Request.QueryString["cat"].AsInt();
+    uint galleryid = (uint)Request.QueryString["gallery"].AsInt();
+
+    string mode = Request.QueryString["mode"];
+
+    string url = Request.Url.AbsoluteUri;
+
+    //Youtube video embedding url
+    App["youtubeembed"] = "https://www.youtube.com/embed/{0}?autoplay=1";
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="Tayfun Sertan Yaman">
+    <title>Example Photo gallery usage</title>
+    <!-- Custom styles for this template -->
+    <link href="./css/photogallery.css" rel="stylesheet">
+    <link href="./css/font-awesome.min.css" rel="stylesheet" />
+    <link href="./css/homepage.css" rel="stylesheet" />
+    <!--SCRIPTS-->
+    <script src="./Scripts/jquery.min.js"></script>
+    <script src="./Scripts/webfontloader.js"></script>
+    <script src="./Scripts/waitforimages.min.js"></script>
+    <script src="./Scripts/modernizr-custom-min.js"></script>
+    <script src="./Scripts/jquery.transit.min.js"></script>
+    <script src="./Scripts/jquery.touchSwipe.min.js"></script>
+    <script>
+        var loading = false;
+        var page = @page;
+        var pagetotal = @pagetotal;
+        var maxphotos = @maxphotos;
+        var albumid = @albumid;
+        var categoryid = @categoryid;
+        var galleryid = @galleryid;
+        var tagname = "";
+        var youtubeembed = "@((String)App["youtubeembed"])";
+        var feedurl = "/PhotoFeeder.cshtml";
+        @if (Request.Url.Query != "")
+        {
+            @: feedurl+= "@Request.Url.Query" ;
+        }
+        var mode = "@mode";
+    </script>
+    <script src="./Scripts/photogallery.js"></script>
+</head>
+
+
+<body>
+    <!--
+    MAIN SECTION
+    -->
+    <main>
+        <section id="content" role="main">
+            <div class="main-content">
+                <div id="contentfirst" class="main-content-box">
+                    <section class="photogallery-container clearfix" role="contentinfo">
+                        <ul id="photo-list">
+                            <!-- list loads here -->
+                            @{ 
+                                switch (mode)
+                                {
+                                    case "album":
+                                                <text>@CustomHelpers.DrawAlbums(maxphotos);</text>
+                                            break;
+
+
+                                        default:
+                                                <text>@CustomHelpers.DrawThumbnails(maxphotos);</text>
+                                                break;
+                                        }
+                                }
+                        </ul>
+                        <!-- bottom loader -->
+                        <div class="bottom-loader" id="albumloader" style="display: none;"><img src="./images/loader.gif" alt="Loading..."></div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </main>
+    <div class="photo-overlay" id="overlay"></div>
+    <div class="photo-loader" id="photoloader"><img src="./Images/loadergray.gif" alt="Loading..."></div>
+    <div class="photo-viewer-container" id="view-container">
+        <div class="photo-overlay-container" id="view-container-overlay"></div>
+        <div class="photo-content">
+            <button title="Close (Esc)" type="button" class="photo-close" id="close-button"><i class="fa fa-close"></i></button>
+            <button type="button" title="Right (Right arrow)" class="photo-navicon photo-navicon-right" id="view-container-rightnav"><i class="fa fa-chevron-right"></i></button>
+            <button type="button" title="Left (Left arrow)" class="photo-navicon photo-navicon-left" id="view-container-leftnav"><i class="fa fa-chevron-left"></i></button>
+
+            <figure id="photocontainer">
+                <img class="photo-viewer" id="viewer">
+                <img class="photo-protector" id="protect" src="./Images/blank.gif">
+                <div class="photo-videoplaylink" id="videoplay">
+                    <div class="linkcontainer">
+                        <a href="" id="videolink" video-id="">
+                            <i class="fa fa-play-circle-o"></i>
+                        </a>
+                    </div>
+                </div>
+                <iframe class="youtubeviewer" id="video-view" src="" frameborder="0" allowfullscreen autoplay></iframe>
+                <figcaption>
+                    <div class="photo-info" id="photo-info">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td width="200px">
+                                        <span class="wicon-camera2 iconlarge" align="left" style="float:left;margin:2px;"></span>
+                                        <div class="camerainfopart"><span class="camerainfo" id="camera"></span></div>
+                                        <div class="camerainfopart"><span class="camerainfo" id="lens"></span>  </div>
+                                        <div class="camerainfopart"><span class="camerainfo icon-aperture"></span> <span class="camerainfo" id="aperture"></span>&nbsp;&nbsp;&nbsp;<span class="camerainfo" id="shutter"></span> </div>
+                                        <div class="camerainfopart">ISO <span class="camerainfo" id="iso"></span> </div>
+                                    </td>
+                                    <td>
+                                        <h2><span id="name"></span></h2>
+                                        <div class="camerainfopart">Date: <span class="camerainfo" id="date">&nbsp; Place: </span><span class="camerainfo" id="place"></span> </div><br>
+                                        <div class="camerainfopart" id="albuminfo">
+                                            Album:<span class="camerainfo"><a href="#" id="albumlink" class="infoalbumlink"></a></span>
+                                        </div>
+                                        <span id="desc"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </figcaption>
+            </figure>
+        </div>
+    </div>
+</body>
+</html>
